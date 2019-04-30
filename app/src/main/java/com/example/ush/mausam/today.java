@@ -1,6 +1,6 @@
 package com.example.ush.mausam;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,26 +12,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import static com.example.ush.mausam.RemoteAccess.OPEN_WEATHER_MAP_API;
-import static com.example.ush.mausam.RemoteAccess.getJSON;
+import java.math.*;
 
 public class today extends Fragment {
 
     private View mView;
-    TextView temp, humidity, condi, wind, extra;
+    TextView temp, prepprob, humidity, wind_speed,pressure,cloud,uvIndex,ozone;
     JSONObject Newdata = null;
 
     public today() {
@@ -43,12 +34,16 @@ public class today extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.today, container, false);
 
-        temp = (TextView) mView.findViewById(R.id.t2);
-        humidity = (TextView) mView.findViewById(R.id.t3);
-        condi = (TextView) mView.findViewById(R.id.t4);
-        wind = (TextView) mView.findViewById(R.id.t5);
-        extra = (TextView) mView.findViewById(R.id.t6);
-
+        temp = (TextView) mView.findViewById(R.id.temp);
+        prepprob = (TextView) mView.findViewById(R.id.prepprob);
+        humidity = (TextView) mView.findViewById(R.id.humidity);
+        wind_speed = (TextView) mView.findViewById(R.id.wind_speed);
+        pressure = (TextView) mView.findViewById(R.id.pressure);
+        cloud =(TextView) mView.findViewById(R.id.cloudcover);
+        uvIndex =(TextView) mView.findViewById(R.id.uvindex);
+         ozone =(TextView) mView.findViewById(R.id.ozone);
+         TextView celcius =(TextView)mView.findViewById(R.id.celcius);
+        celcius.setText((char) 0x00B0  + "C");
 
         return mView;
     }
@@ -62,11 +57,12 @@ public class today extends Fragment {
 
 //----------------------NEW CODE---------------------------
         RequestQueue queue = Volley.newRequestQueue(getContext());
-            String url ="http://api.openweathermap.org/data/2.5/weather?q=haldwani&appid=0089b8306978e1121b4b76ba274e3b8e";
-
+            //String url ="https://api.darksky.net/forecast/2e444c242c30a304f476f6381a96c48a/30.398724,%2078.075705";
+        String url="https://api.darksky.net/forecast/2e444c242c30a304f476f6381a96c48a/30.397595,78.075168";
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
@@ -75,32 +71,28 @@ public class today extends Fragment {
                            JSONObject data = new JSONObject(response.toString());
                            Newdata = data;
 
-                           //JSONArray jsonarr;
-                           //JSONObject Jobj = data.getJSONObject("0");
-                           JSONArray jsonarr=data.getJSONArray("main");
-                           JSONObject jobject= jsonarr.getJSONObject(0);
-                           String main=jobject.getString("temp");
-                           String desc=jobject.getString("pressure");
-                           String icon=jobject.getString("humidity");
-                           String str=jobject.getString("temp_min");
-                           wind.setText(str);
-                           temp.setText(main);
-                           humidity.setText(desc);
-                           condi.setText(icon);
 
-                           Log.d("print",str+main+desc);
-
-//                            String main=jobject.getString("main");
-//                           temp.setText(main);
-//                           humidity.setText(desc);
-//                           condi.setText(icon);
-//                           jsonarr=data.getJSONArray("base");
-//
-//                           JSONObject jobject2= jsonarr.getJSONObject(1);
-//                           String base=jobject.getString("base");
-//                          String base2=jobject2.getString("base");
-//                           wind.setText(base2);
-//                           Toast.makeText(getContext(),"base: "+base,Toast.LENGTH_SHORT);
+                           JSONObject jsonob=data.getJSONObject("currently");
+                           Log.d("Main",jsonob.toString());
+                           String sttemp=jsonob.getString(("temperature"));
+                           String stpress=jsonob.getString(("pressure"));
+                           String sthumdi=jsonob.getString(("humidity"));
+                           String stwind=jsonob.getString(("windSpeed"));
+                           String stvisible=jsonob.getString(("visibility"));
+                           String stprepprob= jsonob.getString("precipProbability");
+                           String stcloud=jsonob.getString("cloudCover");
+                           String stuvIndex=jsonob.getString("uvIndex");
+                           String stozone=jsonob.getString("ozone");
+                           
+                           temp.setText(""+(Math.round((((Float.parseFloat(sttemp)-32)*5)/9))));
+                           wind_speed.setText("Wind Speed: "+(Float.parseFloat(stwind)));
+                           humidity.setText("Humidity: "+Float.parseFloat(sthumdi));
+                           pressure.setText("Pressure: "  + Float.parseFloat(stpress));
+                           pressure.setText("Visibility: " + Float.parseFloat(stvisible));
+                           prepprob.setText("Precipitation Probability: "+ Float.parseFloat(stprepprob));
+                           cloud.setText("Cloud Cover: "+Float.parseFloat(stcloud));
+                           uvIndex.setText("Cloud Cover: "+Float.parseFloat(stuvIndex));
+                           ozone.setText("Cloud Cover: "+Float.parseFloat(stozone));
 //
 
 
@@ -127,4 +119,4 @@ public class today extends Fragment {
     }
 
 
-}6
+}

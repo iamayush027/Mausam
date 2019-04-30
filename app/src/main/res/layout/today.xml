@@ -7,7 +7,7 @@
 <RelativeLayout
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
     <ImageView
         android:layout_alignParentTop="true"
@@ -16,72 +16,105 @@
         android:layout_height="253dp"
         android:contentDescription="@string/image_to_be_loaded"
         app:srcCompat="@drawable/ic_launcher_background" />
-
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relative1"
         android:layout_below="@id/imageView"
+        >
+        <TextView
+           android:layout_alignParentTop="true"
+
         android:id="@+id/temp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="70sp"
-        android:textStyle="italic"
-        android:background="@color/colorPrimary"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="70sp"
+            android:textStyle="italic"
+            android:background="#9EC2E2"/>
 
-    <TextView
 
-        android:id="@+id/prepprob"
+
+        <TextView
+            android:id="@+id/celcius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@id/temp"
+            android:layout_marginLeft="0dp"
+
+            android:layout_marginTop="1dp"
+            android:layout_toRightOf="@id/temp"
+            android:textSize="40sp" />
+
+
+    </RelativeLayout>
+
+
+
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/temp"/>
+        android:layout_height="150dp"
+        android:layout_below="@id/relative1"
+        android:background="@drawable/weatherback"
 
-    <TextView
-        android:id="@+id/humidity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/prepprob"
-     />
+        android:backgroundTintMode="add"
+        >
+        <TextView
 
-    <TextView
-        android:id="@+id/wind_speed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/humidity"
-     />
+            android:id="@+id/prepprob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="#8EAECB"
+            />
 
-    <TextView
-        android:id="@+id/pressure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wind_speed"/>
-    <TextView
-        android:id="@+id/cloudcover"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pressure"/>
+        <TextView
+            android:id="@+id/humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/prepprob"
+            android:background="#DCA7B9"
+            />
 
-    <TextView
-        android:id="@+id/uvindex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cloudcover"/>
+        <TextView
+            android:id="@+id/wind_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/humidity"
+            android:background="#7F9CB6"
+            />
 
-    <TextView
-        android:id="@+id/ozone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/uvindex"/>
+        <TextView
+            android:id="@+id/pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wind_speed"
+            android:background="#A8AE98"/>
+        <TextView
+            android:id="@+id/cloudcover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pressure"
+            android:background="#FFEF99"/>
 
-    <TextView
-        android:id="@+id/celcius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
-        android:layout_marginLeft="0dp"
+        <TextView
+            android:id="@+id/uvindex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cloudcover"
+            android:background="#B9DB92"/>
 
-        android:layout_marginTop="1dp"
-        android:layout_toRightOf="@id/temp"
-        android:text="C"
-        android:textSize="40sp" />
+        <TextView
+            android:id="@+id/ozone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/uvindex"
+            android:background="#EE847F"/>
 
+
+    </RelativeLayout>
 
 </RelativeLayout>
 </ScrollView>

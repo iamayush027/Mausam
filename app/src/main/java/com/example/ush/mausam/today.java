@@ -1,9 +1,16 @@
 package com.example.ush.mausam;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,17 +24,17 @@ import org.json.JSONObject;
 import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import java.math.*;
 
-public class today extends Fragment {
+public class today extends Fragment implements LocationListener {
 
     private View mView;
     TextView temp, prepprob, humidity, wind_speed,pressure,cloud,uvIndex,ozone;
     JSONObject Newdata = null;
+    double latitude,longitude;
 
-    public today() {
 
-    }
+    public today()
+    { }
 
     @Nullable
     @Override
@@ -45,20 +52,49 @@ public class today extends Fragment {
          TextView celcius =(TextView)mView.findViewById(R.id.celcius);
         celcius.setText((char) 0x00B0  + "C");
 
+
+
         return mView;
     }
 
     @Override
-    public void onStart() {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        LocationManager locationManager;
+
+        String locationPermission[] = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), locationPermission, 1);
+        }
+
+
+        Location locat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);//try krna force stop chala log d
+        Toast.makeText(getContext(), "Latitude:" + locat.getLatitude() + ", Longitude:" + locat.getLongitude(), Toast.LENGTH_LONG).show();
+        Log.d("ye Cordinates: ", "Latitude:" + locat.getLatitude() + ", Longitude:" + locat.getLongitude());
+        latitude=locat.getLatitude();
+        longitude=locat.getLongitude();
+
+
+
+    }
+
+
+    @Override
+    public void onStart()
+    {
         super.onStart();
-
-
 
 
 //----------------------NEW CODE---------------------------
         RequestQueue queue = Volley.newRequestQueue(getContext());
             //String url ="https://api.darksky.net/forecast/2e444c242c30a304f476f6381a96c48a/30.398724,%2078.075705";
-        String url="https://api.darksky.net/forecast/2e444c242c30a304f476f6381a96c48a/30.397595,78.075168";
+        String url="https://api.darksky.net/forecast/2e444c242c30a304f476f6381a96c48a/" +latitude+","+longitude;
+        Log.d("string",url);
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -118,5 +154,74 @@ public class today extends Fragment {
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        //ye bhi to hailolo...iska kya? ummm jb jb location change hogi
+        //to ye toast generqte krega
+        //kyunki har bar alag cordinates aa rhe hai\
+        //haan aa rha haiyo
+       // Toast.makeText(getContext(),"Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude(),Toast.LENGTH_LONG).show();
+     // Log.d("Cordinates: ", "Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+        //  txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
+    }
+
 
 }
+
+//public class locate extends Activity implements LocationListener {
+//    protected LocationManager locationManager;
+//    protected LocationListener locationListener;
+//    protected Context context;
+//    String lat;
+//    String provider;
+//    protected String latitude,longitude;
+//    protected boolean gps_enabled,network_enabled;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//
+//
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+//    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//
+//        txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String provider) {
+//        Log.d("Latitude","disable");
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String provider) {
+//        Log.d("Latitude","enable");
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String provider, int status, Bundle extras) {
+//        Log.d("Latitude","status");
+//    }
+//}
+//
